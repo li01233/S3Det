@@ -80,7 +80,7 @@ setup(
         'export': [
             'coremltools>=7.0',
             'openvino-dev>=2023.0',
-            'tensorflow<=2.13.1',  # TF bug https://github.com/ultralytics/ultralytics/issues/5161
+            'tensorflow<=2.17.0',  # TF bug https://github.com/ultralytics/ultralytics/issues/5161
             'jax<=0.4.21',  # tensorflowjs bug https://github.com/google/jax/issues/18978
             'jaxlib<=0.4.21',  # tensorflowjs bug https://github.com/google/jax/issues/18978
             'tensorflowjs',  # automatically installs tensorflow
