@@ -1,0 +1,63 @@
+# Ultralytics YOLO 🚀, AGPL-3.0 license
+# YOLOv8 object detection model with P3-P5 outputs. For Usage examples see https://docs.ultralytics.com/tasks/detect
+
+# Parameters
+nc: 6  # number of classes
+scales: 
+  x: [1.00, 1.25, 512]   # YOLOv8x summary: 365 layers, 68229648 parameters, 68229632 gradients, 258.5 GFLOPs
+
+# YOLOv8.0n backbone
+backbone:
+  # [from, repeats, module, args]
+  - [-1, 1, Focus, [32, 3]]  # 0
+  - [-1, 1, MV2Block, [32, 1, 2]]  # 1 stride,expansion
+  - [-1, 1, MV2Block, [32, 2, 2]]  # 2
+  - [-1, 1, MV2Block, [64, 1, 2]]  # 3
+  - [-1, 1, MV2Block, [128, 1, 2]]  # 4 B2
+  - [-1, 1, MV2Block, [128, 2, 2]]  # 5
+  # in_channel, kernel_size, patch_size, ratio, mlp_dim, depth=3, dim=96
+  - [-1, 1, MobileViTBlock, [128, 3, [2,2],192, 2, 96]] # 6 B3
+  - [-1, 1, MV2Block, [256, 1, 2]]  # 7
+  - [-1, 1, MV2Block, [256, 2, 2]]  # 8
+  - [-1, 1, MobileViTBlock, [256, 3, [2,2],192, 4, 96]] # 9 B4
+  - [-1, 1, MV2Block, [256, 2, 2]]  # 10
+  - [-1, 1, MobileViTBlock, [256, 3, [2,2],192, 3, 96]] # 11
+  - [-1, 1, SPPF, [256, 5]]  # 12 B5
+
+# YOLOv8.0n head
+head:
+  # low-GD 得到低层次的全局特征
+  - [[4, 6, 9, -1], 1, L_FAM, []] # 13
+  - [-1, 1, L_IFM, [96, 3, 384]] # 14 in_ch = 128+128+256+256 o_ch=384
+  - [-1, 1, Split, [256, 128]] # 15
+
+  # 将低层全局特征注入到p4中
+  - [6, 1, SimConv, [256, 1, 1]] #16
+  - [[-1, 9, 12], 1, L_LAF,[256]] #17 x_local B3 B4 B5
+  - [[-1, 15], 1, Inject, [256, 0, 0]] # 18 x_local+x_gobal(split) gobal_idx split_idx
+  - [-1, 1, RepBlock, [256, 12]] # 19 Inject后通过12个Rep P4
+  
+  # 将低层全局特征注入到p3中
+  - [9, 1, SimConv, [128, 1, 1]] # 20
+  - [[4, 6, -1], 1, L_LAF,[128]] #21 x_local B2 B3 B4
+  - [[-1, 15], 1, Inject, [128, 1, 1]] # 22 x_local+x_gobal(split)
+  - [-1, 1, RepBlock, [128, 12]] # 23 Inject后通过12个Rep P3 N3
+  
+  # high-GD:得到高层次的全局特征
+  - [-1, 1, SimConv, [256, 1, 1]] # 24
+  - [[-1, 19, 12], 1, H_FAM, [1]] # 25
+  - [-1, 1, H_IFM, [2, 960, 8, 4, 1, 2, 0, 0, [0.1, 2]]] # 26 o_ch=768
+  - [-1, 1, Split, [256, 512]] # 27
+  
+  # 将高层全局特征注入到n4
+  - [[23, 19], 1, H_LAF, []] # 28 P3+P4
+  - [-1, 1, SimConv, [256, 1, 1]] # 29
+  - [[-1, 27], 1, Inject, [256, 0, 0]] # 30 x_local+x_gobal(split)
+  - [-1, 1, RepBlock, [256, 12]] # 31 n4
+
+  # 将高层全局特征注入到n5
+  - [[19, 12], 1, H_LAF, []] # 32
+  - [[-1, 27], 1, Inject, [512, 1, 1]] # 33 x_local+x_gobal(split)
+  - [-1, 1, RepBlock, [512, 12]] # 34 n5
+
+  - [[23, 31, 34], 1, Detect, [nc]]  # Detect(n3, n4, n5)
