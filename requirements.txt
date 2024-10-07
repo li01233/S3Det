@@ -30,7 +30,7 @@ onnxsim>=0.4.1  # ONNX simplifier
 nvidia-pyindex  # TensorRT export
 nvidia-tensorrt  # TensorRT export
 scikit-learn==0.19.2  # CoreML quantization
-tensorflow>=2.4.1,<=2.13.1  # TF exports (-cpu, -aarch64, -macos)
+tensorflow>=2.4.1,<=2.17.0  # TF exports (-cpu, -aarch64, -macos)
 # tflite-support
 jax<=0.4.21  # tensorflowjs bug https://github.com/google/jax/issues/18978
 jaxlib<=0.4.21  # tensorflowjs bug https://github.com/google/jax/issues/18978
