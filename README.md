@@ -1,4 +1,4 @@
-# S3Det: Small-Scale Ships Detector
+# S^3Det: Small-Scale Ships Detector
 
 S^3Det is an object detector for small-scale ships on the sea, built using open-source code from Ultralytics, please visit <a href="https://docs.ultralytics.com/">documentation</a> for more information.
 
