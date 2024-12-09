@@ -4,13 +4,13 @@ S^3Det is an object detector for small-scale ships on the sea, built using open-
 
 The article "Spotlight on Small-scale Ship Detection: Empowering YOLO with Advanced Techniques and a Novel Dataset" is currently accepted by ACCV2024.
 
-@InProceedings{Li_2024_ACCV,
-    author    = {Li, Lingya and Hou, Zhixing and Ma, Ming and Xiang, Jing and Yuan, Chuangxin and Xia, Guihua},
-    title     = {Spotlight on Small-scale Ship Detection: Empowering YOLO with Advanced Techniques and a Novel Dataset},
-    booktitle = {Proceedings of the Asian Conference on Computer Vision (ACCV)},
-    month     = {December},
-    year      = {2024},
-    pages     = {784-799}
+@InProceedings{Li_2024_ACCV,/
+    author    = {Li, Lingya and Hou, Zhixing and Ma, Ming and Xiang, Jing and Yuan, Chuangxin and Xia, Guihua},/
+    title     = {Spotlight on Small-scale Ship Detection: Empowering YOLO with Advanced Techniques and a Novel Dataset},/
+    booktitle = {Proceedings of the Asian Conference on Computer Vision (ACCV)},/
+    month     = {December},/
+    year      = {2024},/
+    pages     = {784-799}/
 }
 
 # iShip-1: Maritime Small-Scale Ship Detection Dataset
